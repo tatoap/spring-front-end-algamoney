@@ -9,6 +9,7 @@ import { ConfirmationService, MessageService } from 'primeng/api';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ToastModule } from 'primeng/toast';
 
+import { AuthService } from '../seguranca/auth.service';
 import { ErrorHandlerService } from './error-handler.service';
 import { NavbarComponent } from './navbar/navbar.component';
 import { LancamentoService } from '../lancamentos/lancamento.service';
@@ -38,6 +39,7 @@ registerLocaleData(localePt);
     LancamentoService,
     PessoaService,
     ErrorHandlerService,
+    AuthService,
 
     ConfirmationService,
     MessageService,

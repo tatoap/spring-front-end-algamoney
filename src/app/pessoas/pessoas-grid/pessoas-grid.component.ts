@@ -3,8 +3,9 @@ import { Title } from '@angular/platform-browser';
 
 import { ConfirmationService, LazyLoadEvent, MessageService } from 'primeng/api';
 import { Table } from 'primeng/table';
-import { ErrorHandlerService } from 'src/app/core/error-handler.service';
 
+import { ErrorHandlerService } from 'src/app/core/error-handler.service';
+import { AuthService } from 'src/app/seguranca/auth.service';
 import { PessoaFiltro, PessoaService } from '../pessoa.service';
 import { PessoasPesquisaComponent } from '../pessoas-pesquisa/pessoas-pesquisa.component';
 
@@ -22,7 +23,8 @@ export class PessoasGridComponent implements OnInit {
               private messageService: MessageService,
               private confirmationService: ConfirmationService,
               private errorHandler: ErrorHandlerService,
-              private title: Title
+              private title: Title,
+              public auth: AuthService
   ) {}
 
   @Input() pessoas = [];
@@ -30,7 +32,7 @@ export class PessoasGridComponent implements OnInit {
   @Input() filtro = new PessoaFiltro;
 
   ngOnInit() {
-    this.title.setTitle('Pesquisa de lançamentos');
+    this.title.setTitle('Pesquisa de pessoas');
   }
 
   confirmarExclusao(pessoa: any) {
@@ -49,16 +51,23 @@ export class PessoasGridComponent implements OnInit {
   excluir(pessoa: any, numPagina: number) {
     this.pessoaService.excluir(pessoa.id)
       .then(() => {
-        //this.grid.reset(); volta para a primeira página
-        if (this.pessoas.length === 1 && this.filtro.pagina > 0) {
-          this.grid.first = (this.filtro.pagina - 1) * this.filtro.itensPorPagina;
-        } else {
-          this.pessoaPesquisa.pesquisar(numPagina);
-        } // continua na página atual de pesquisa.
+        this.manterNaPaginaDePesquisa(numPagina);
 
         this.messageService.add({ severity: 'success', detail: 'Pessoa excluída com sucesso!' });
       })
-      .catch(erro => this.errorHandler.handle(erro));
+      .catch(erro => {
+        this.errorHandler.handle(erro);
+        this.manterNaPaginaDePesquisa(numPagina);
+      });
+  }
+
+  manterNaPaginaDePesquisa(numPagina: number) {
+    //this.grid.reset(); volta para a primeira página
+    if (this.pessoas.length === 1 && this.filtro.pagina > 0) {
+      this.grid.first = (this.filtro.pagina - 1) * this.filtro.itensPorPagina;
+    } else {
+      this.pessoaPesquisa.pesquisar(numPagina);
+    } // continua na página atual de pesquisa.
   }
 
   alternarStatus(pessoa: any): void {
@@ -85,13 +94,6 @@ export class PessoasGridComponent implements OnInit {
     const acao = novoStatus ? 'ativada' : 'inativada';
     this.messageService.add({ severity: 'success', detail: `Pessoa ${acao} com sucesso!` });
   }
-
-    /*if (pessoa.ativo) {
-      this.pessoaService.inativar(pessoa.id);
-    } else {
-      this.pessoaService.ativar(pessoa.id);
-    }*/
-    //this.pessoaPesquisa.pesquisar(this.filtro.pagina);
 
   aoMudarPagina(event: LazyLoadEvent) {
     const pagina = event.first / event.rows;

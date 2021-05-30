@@ -1,6 +1,6 @@
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
-import { tokenize } from '@angular/compiler/src/ml_parser/lexer';
 import { Injectable } from '@angular/core';
+import { environment } from 'src/environments/environment';
 
 import { Pessoa } from '../core/model';
 
@@ -15,15 +15,13 @@ export class PessoaFiltro {
 })
 export class PessoaService {
 
-  pessoasUrl = 'http://localhost:8080/pessoas';
+  pessoasUrl: string;
 
-  pessoaToken = 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX25hbWUiOiJhZG1pbkBhbGdhbW9uZXkuY29tIiwic2NvcGUiOlsicmVhZCIsIndyaXRlIl0sIm5vbWUiOiJBZG1pbmlzdHJhZG9yIiwiZXhwIjoxNjIxOTExNTc1LCJhdXRob3JpdGllcyI6WyJST0xFX0NBREFTVFJBUl9DQVRFR09SSUEiLCJST0xFX1BFU1FVSVNBUl9QRVNTT0EiLCJST0xFX1JFTU9WRVJfUEVTU09BIiwiUk9MRV9DQURBU1RSQVJfTEFOQ0FNRU5UTyIsIlJPTEVfUEVTUVVJU0FSX0xBTkNBTUVOVE8iLCJST0xFX1JFTU9WRVJfTEFOQ0FNRU5UTyIsIlJPTEVfQ0FEQVNUUkFSX1BFU1NPQSIsIlJPTEVfUEVTUVVJU0FSX0NBVEVHT1JJQSJdLCJqdGkiOiJmMTM5OWU0Ni0zNzJlLTQ3OWQtOTZlMi0xOTEzYTNjYzZjMzciLCJjbGllbnRfaWQiOiJhbmd1bGFyIn0.INgAtrxZU59LX0YxtXGXBmNMUVNEyi3KdEAva_y1efk';
-
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {
+    this.pessoasUrl = `${environment.apiUrl}/pessoas`;
+  }
 
   pesquisar(filtro: PessoaFiltro): Promise<any> {
-    const headers = new HttpHeaders()
-      .append('Authorization', this.pessoaToken);
     let params = new HttpParams()
       .set('page', filtro.pagina.toString())
       .set('size', filtro.itensPorPagina.toString());
@@ -32,7 +30,7 @@ export class PessoaService {
         params = params.set('nome', filtro.nome);
       }
 
-    return this.http.get(`${this.pessoasUrl}`, { headers, params })
+    return this.http.get(`${this.pessoasUrl}`, { params })
         .toPromise()
         .then(response => {
           const pessoas = response['content'];
@@ -46,47 +44,51 @@ export class PessoaService {
         });
   }
 
-  adicionar(pessoa: Pessoa): Promise<Pessoa> {
-    const headers = new HttpHeaders()
-      .append('Authorization', this.pessoaToken)
-      .append('Content-Type', 'application/json');
+  buscarPorId(id: number): Promise<Pessoa> {
+    return this.http.get<Pessoa>(`${this.pessoasUrl}/${id}`)
+      .toPromise()
+      .then(response => {
+        const pessoa = response;
 
-    return this.http.post<Pessoa>(this.pessoasUrl, pessoa, { headers })
+        return pessoa;
+      });
+  }
+
+  adicionar(pessoa: Pessoa): Promise<Pessoa> {
+    return this.http.post<Pessoa>(this.pessoasUrl, pessoa)
       .toPromise();
   }
 
-  ativar(id: number): Promise<void> {
-    const headers = new HttpHeaders()
-      .append('Authorization', this.pessoaToken);
+  atualizar(pessoa: Pessoa): Promise<Pessoa> {
+    return this.http.put<Pessoa>(`${this.pessoasUrl}/${pessoa.id}`, pessoa)
+      .toPromise()
+      .then(response => {
+        const pessoa = response;
 
-    return this.http.put(`${this.pessoasUrl}/${id}/ativo`, { headers })
+        return pessoa;
+      });
+  }
+
+  ativar(id: number): Promise<void> {
+    return this.http.put(`${this.pessoasUrl}/${id}/ativo`, true)
         .toPromise()
         .then(() => null);
   }
 
   inativar(id: number): Promise<void> {
-    const headers = new HttpHeaders()
-      .append('Authorization', this.pessoaToken);
-
-    return this.http.delete(`${this.pessoasUrl}/${id}/ativo`, { headers })
+    return this.http.delete(`${this.pessoasUrl}/${id}/ativo`)
         .toPromise()
         .then(() => null);
   }
 
   excluir(id: number): Promise<void> {
-    const headers = new HttpHeaders()
-      .append('Authorization', this.pessoaToken);
-
-    return this.http.delete(`${this.pessoasUrl}/${id}`, { headers })
+    return this.http.delete(`${this.pessoasUrl}/${id}`)
       .toPromise()
       .then(() => null);
   }
 
   listarTodas(): Promise<any> {
-    const headers = new HttpHeaders()
-      .append('Authorization', this.pessoaToken);
-
-    return this.http.get(this.pessoasUrl, { headers })
+    return this.http.get(this.pessoasUrl)
       .toPromise()
       .then(response => response['content']);
   }

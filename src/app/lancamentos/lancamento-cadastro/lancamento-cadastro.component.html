@@ -1,5 +1,5 @@
 <div class="container">
-  <form autocomplete="off" #f="ngForm" (ngSubmit)="salvar(f)">
+  <form #f="ngForm" autocomplete="off" (ngSubmit)="salvar(f)">
 
     <div class="p-grid">
       <div class="p-col-12">
@@ -19,9 +19,9 @@
           [(ngModel)]="lancamento.dataVencimento" #vencimento="ngModel">
         </p-calendar>
 
-        <!--<app-message [control]="vencimento" error="required"
+        <app-message [control]="vencimento" error="required"
           text="Informe uma data de vencimento">
-        </app-message>-->
+        </app-message>
 
       </div>
       <div class="p-col-6 p-md-3 p-fluid">
@@ -37,12 +37,12 @@
           [(ngModel)]="lancamento.descricao"
           #descricao="ngModel" required minlength="5">
 
-        <!--<app-message [control]="descricao" error="required"
+        <app-message [control]="descricao" error="required"
           text="Informe uma descrição">
         </app-message>
         <app-message [control]="descricao" error="minlength"
           text="Mínimo de {{ descricao.errors?.minlength?.requiredLength }} caracteres">
-        </app-message>-->
+        </app-message>
       </div>
 
       <div class="p-col-12 p-md-3 p-fluid">
@@ -50,6 +50,7 @@
         <input name="valor" pInputText type="text" placeholder="0,00"
           currencyMask [options]="{ prefix: '', thousands: '.', decimal: ',', allowNegative: false}"
           [(ngModel)]="lancamento.valor">
+
         <!--<app-message [control]="valor" error="required"
           text="Informe um valor">
         </app-message>-->
@@ -61,6 +62,10 @@
           placeholder="Selecione"
           [(ngModel)]="lancamento.categoria.id">
         </p-dropdown>
+
+        <!--<app-message [control]="categoria" error="required"
+          text="Selecione uma categoria">
+        </app-message>-->
       </div>
 
       <div class="p-col-12 p-md-6 p-fluid">
@@ -69,6 +74,10 @@
           placeholder="Selecione" [filter]="true"
           [(ngModel)]="lancamento.pessoa.id">
         </p-dropdown>
+
+        <!--<app-message [control]="pessoa" error="required"
+          text="Selecione uma pessoa">
+        </app-message>-->
       </div>
 
       <div class="p-col-12 p-fluid">

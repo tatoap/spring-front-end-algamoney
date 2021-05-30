@@ -27,6 +27,13 @@ label {
   font-weight: bold;
 }
 
+.wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+}
+
 @media(min-width: 1200px) {
   .container {
     width: 1170px;

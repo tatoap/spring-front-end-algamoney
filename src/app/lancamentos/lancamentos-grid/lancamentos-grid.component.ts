@@ -4,6 +4,7 @@ import { Title } from '@angular/platform-browser';
 import { LazyLoadEvent, MessageService, ConfirmationService } from 'primeng/api';
 import { Table } from 'primeng/table';
 import { ErrorHandlerService } from 'src/app/core/error-handler.service';
+import { AuthService } from 'src/app/seguranca/auth.service';
 
 import { LancamentoFiltro, LancamentoService } from '../lancamento.service';
 import { LancamentosPesquisaComponent } from '../lancamentos-pesquisa/lancamentos-pesquisa.component';
@@ -22,7 +23,8 @@ export class LancamentosGridComponent {
               private messageService: MessageService,
               private confirmationService: ConfirmationService,
               private errorHandler: ErrorHandlerService,
-              private title: Title
+              private title: Title,
+              public auth: AuthService
   ) {}
 
  @Input() lancamentos = [];
@@ -30,7 +32,7 @@ export class LancamentosGridComponent {
  @Input() filtro = new LancamentoFiltro;
 
  ngOnInit() {
-  this.title.setTitle('Pesquisa de pessoas');
+  this.title.setTitle('Pesquisa de lançamentos');
  }
 
  confirmarExclusao(lancamento: any) {

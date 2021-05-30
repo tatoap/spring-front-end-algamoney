@@ -1,9 +1,9 @@
 <div class="container">
-  <form autocomplete="off" #f="ngForm" (ngSubmit)="salvar(f)">
+  <form #f="ngForm" autocomplete="off" (ngSubmit)="salvar(f)">
 
     <div class="p-grid">
       <div class="p-col-12">
-        <h1>Nova Pessoa</h1>
+        <h1>{{ editando ? 'Editar' : 'Nova' }} Pessoa</h1>
       </div>
 
       <div class="p-col-12 p-fluid ">
@@ -11,12 +11,12 @@
         <input pInputText type="text" name="nome"
           [(ngModel)]="pessoa.nome" #nome="ngModel" required minlength="5">
 
-        <!--<app-message [control]="nome" error="required"
+        <app-message [control]="nome" error="required"
           text="Informe o nome">
         </app-message>
         <app-message [control]="nome" error="minlength"
           text="Mínimo de {{ nome.errors?.minlength?.requiredLength }} caracteres">
-        </app-message>-->
+        </app-message>
       </div>
 
       <div class="p-col-12 p-md-9 p-fluid">
@@ -24,9 +24,9 @@
         <input pInputText type="text" name="logradouro"
           [(ngModel)]="pessoa.endereco.logradouro" #logradouro="ngModel" required>
 
-        <!--<app-message [control]="logradouro" error="required"
+        <app-message [control]="logradouro" error="required"
           text="Informe o logradouro">
-        </app-message>-->
+        </app-message>
       </div>
 
       <div class="p-col-12 p-md-3 p-fluid">
@@ -34,15 +34,15 @@
         <input pInputText type="text" name="numero"
           [(ngModel)]="pessoa.endereco.numero" #numero="ngModel" required>
 
-        <!--<app-message [control]="numero" error="required"
+        <app-message [control]="numero" error="required"
           text="Informe o número">
-        </app-message>-->
+        </app-message>
       </div>
 
       <div class="p-col-12 p-md-4 p-fluid">
         <label>Complemento</label>
-        <input name="complemento" pInputText type="text"
-          [(ngModel)]="pessoa.endereco.complemento">
+        <input pInputText type="text" name="complemento"
+          [(ngModel)]="pessoa.endereco.complemento" #complemento="ngModel">
       </div>
 
       <div class="p-col-12 p-md-4 p-fluid">
@@ -50,9 +50,9 @@
         <input pInputText type="text" name="bairro"
           [(ngModel)]="pessoa.endereco.bairro" #bairro="ngModel" required>
 
-        <!--<app-message [control]="bairro" error="required"
+        <app-message [control]="bairro" error="required"
           text="Informe o bairro">
-        </app-message>-->
+        </app-message>
       </div>
 
       <div class="p-col-12 p-md-4 p-fluid">
@@ -60,9 +60,10 @@
         <p-inputMask mask="99.999-999" name="cep"
           [(ngModel)]="pessoa.endereco.cep" #cep="ngModel">
         </p-inputMask>
-        <!--<app-message [control]="cep" error="required"
+
+        <app-message [control]="cep" error="required"
           text="Informe o CEP">
-        </app-message>-->
+        </app-message>
       </div>
 
       <div class="p-col-12 p-md-6 p-fluid">
@@ -70,9 +71,9 @@
         <input pInputText type="text" name="cidade"
           [(ngModel)]="pessoa.endereco.cidade" #cidade="ngModel" required>
 
-        <!--<app-message [control]="cidade" error="required"
+        <app-message [control]="cidade" error="required"
           text="Informe a cidade">
-        </app-message>-->
+        </app-message>
       </div>
 
       <div class="p-col-12 p-md-6 p-fluid">
@@ -80,14 +81,15 @@
         <input pInputText type="text" name="estado"
           [(ngModel)]="pessoa.endereco.estado" #estado="ngModel" required>
 
-        <!--<app-message [control]="estado" error="required"
+        <app-message [control]="estado" error="required"
           text="Informe o estado">
-        </app-message>-->
+        </app-message>
       </div>
 
       <div class="p-col-12 cadastro-acoes">
         <button pButton type="submit" label="Salvar" [disabled]="!f.valid"></button>
-        <button pButton type="button" label="Novo" class="p-button-info"
+        <button pButton type="button" label="Novo"
+          (click)="novo(f)" class="p-button-info"
           routerLink="/lancamentos/novo">
         </button>
 

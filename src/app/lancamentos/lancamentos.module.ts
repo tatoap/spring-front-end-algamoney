@@ -13,11 +13,11 @@ import { DropdownModule } from 'primeng/dropdown';
 
 import { CurrencyMaskModule } from 'ng2-currency-mask';
 
+import { LancamentosRoutingModule } from './lancamentos-routing.module';
 import { SharedModule } from '../shared/shared.module';
 import { LancamentoCadastroComponent } from './lancamento-cadastro/lancamento-cadastro.component';
 import { LancamentosPesquisaComponent } from './lancamentos-pesquisa/lancamentos-pesquisa.component';
 import { LancamentosGridComponent } from './lancamentos-grid/lancamentos-grid.component';
-import { RouterModule } from '@angular/router';
 
 @NgModule({
   declarations: [
@@ -28,7 +28,6 @@ import { RouterModule } from '@angular/router';
   imports: [
     CommonModule,
     FormsModule,
-    RouterModule,
 
     InputTextModule,
     ButtonModule,
@@ -40,7 +39,8 @@ import { RouterModule } from '@angular/router';
     DropdownModule,
     CurrencyMaskModule,
 
-    SharedModule
+    SharedModule,
+    LancamentosRoutingModule
   ],
   exports: []
 })

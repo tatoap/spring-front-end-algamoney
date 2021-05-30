@@ -15,6 +15,11 @@ export class Endereco {
   estado: string;
 }
 
+export class Usuario {
+  login: string;
+  senha: string;
+}
+
 export class Categoria {
   id: number;
 }
