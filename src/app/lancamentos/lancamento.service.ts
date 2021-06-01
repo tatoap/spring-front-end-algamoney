@@ -7,8 +7,8 @@ import { Lancamento } from '../core/model';
 
 export class LancamentoFiltro {
   descricao: string;
-  dataVencimentoInicio: Date;
-  dataVencimentoFim: Date;
+  dataVencimentoInicio: string;
+  dataVencimentoFim: string;
   pagina = 0;
   itensPorPagina = 3;
 }
@@ -58,14 +58,14 @@ export class LancamentoService {
   }
 
   adicionar(lancamento: Lancamento): Promise<Lancamento> {
-    this.converterDateParaString(lancamento);
-
+    console.log(lancamento.dataVencimento);
+    this.converterDateParaString([lancamento]);
     return this.http.post<Lancamento>(this.lancamentosUrl, lancamento)
       .toPromise();
   }
 
   atualizar(lancamento: Lancamento): Promise<Lancamento> {
-    this.converterDateParaString(lancamento);
+    this.converterDateParaString([lancamento]);
 
     return this.http.put<Lancamento>(`${this.lancamentosUrl}/${lancamento.id}`, lancamento)
       .toPromise()
@@ -82,36 +82,47 @@ export class LancamentoService {
       .then(response => {
         const lancamento = response;
 
-        this.converterStringParaDate([lancamento]);
-
         return lancamento;
       });
   }
 
-  private converterDateParaString(lancamento: Lancamento) {
-    lancamento.dataVencimento = moment(lancamento.dataVencimento).format('DD/MM/YYYY');
+  private converterDateParaString(lancamentos: Lancamento[]) {
+    for (const lancamento of lancamentos) {
+      lancamento.dataVencimento = moment(lancamento.dataVencimento).format('DD/MM/YYYY');
+      console.log("data -> " + lancamento.dataPagamento);
 
-    if (lancamento.dataPagamento) {
-      lancamento.dataPagamento = moment(lancamento.dataPagamento).format('DD/MM/YYYY');
+      if (lancamento.dataPagamento) {
+        lancamento.dataPagamento = moment(lancamento.dataPagamento).format('DD/MM/YYYY');
+      }
     }
-
   }
 
-  private converterStringParaDate(lancamentos: Array<Lancamento>) {
-    return lancamentos.map(lancamento => {
-      return {
-      ...lancamento,
-      dataVencimento: moment(lancamento.dataVencimento, 'YYYY-MM-DD').toDate(),
-      dataPagamento: lancamento.dataPagamento ? moment(lancamento.dataPagamento, 'YYYY-MM-DD').toDate() : null
-      };
-    });
-  }
+  /*private converterStringParaDate(lancamentos: Lancamento[]) {
+
+    for (const lancamento of lancamentos) {
+      lancamento.dataVencimento = moment(lancamento.dataVencimento,
+        'DD-MM-YYYY').toDate();
+
+      if (lancamento.dataPagamento) {
+        lancamento.dataPagamento = moment(lancamento.dataPagamento,
+          'DD-MM-YYYY').toDate();
+      }
+    }
+  }*/
 
   excluir(id: number): Promise<void> {
     return this.http.delete(`${this.lancamentosUrl}/${id}`)
       .toPromise()
       .then(() => null);
   }
+
+  /*return lancamentos.map(lancamento => {
+      return {
+      ...lancamento,
+      dataVencimento: moment(lancamento.dataVencimento, 'DD-MM-YYYY').toDate(),
+      dataPagamento: lancamento.dataPagamento ? moment(lancamento.dataPagamento, 'DD-MM-YYYY').toDate() : null
+      };
+    });*/
 
 }
 

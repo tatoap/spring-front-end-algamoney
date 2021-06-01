@@ -20,8 +20,6 @@ import { SegurancaModule } from './seguranca/seguranca.module';
     HttpClientModule,
 
     CoreModule,
-    LancamentosModule,
-    PessoasModule,
     SegurancaModule,
     AppRoutingModule
   ],
